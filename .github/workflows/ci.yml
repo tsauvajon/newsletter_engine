@@ -5,6 +5,8 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  SQLX_VERSION: 0.5.11
+  SQLX_FEATURES: native-tls,postgres
 
 jobs:
   test:
@@ -19,9 +21,6 @@ jobs:
           POSTGRES_DB: postgres
         ports:
           - 5432:5432
-    env:
-      SQLX_VERSION: 0.5.11
-      SQLX_FEATURES: native-tls,postgres
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -99,9 +98,6 @@ jobs:
           POSTGRES_DB: postgres
         ports:
           - 5432:5432
-    env:
-      SQLX_VERSION: 0.5.5
-      SQLX_FEATURES: postgres,native-tls
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -157,9 +153,6 @@ jobs:
           POSTGRES_DB: postgres
         ports:
           - 5432:5432
-    env:
-      SQLX_VERSION: 0.5.5
-      SQLX_FEATURES: postgres,native-tls
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
