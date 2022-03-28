@@ -47,7 +47,7 @@ jobs:
         with:
           path: |
             ~/.cargo/bin/sqlx
-          key: ${{ runner.os }}-sqlx-${{ env.SQLX_VERSION }}-${{ env.SQLX_FEATURES }}
+          key: ${{ runner.os }}-sqlx-${{ env.SQLX_VERSION }}-MANUALLY_UPDATE_IF_CHANGING_FEATURES
 
       - name: Install sqlx-cli 
         uses: actions-rs/cargo@v1
@@ -101,7 +101,7 @@ jobs:
           - 5432:5432
     env:
       SQLX_VERSION: 0.5.5
-      SQLX_FEATURES: postgres
+      SQLX_FEATURES: postgres,native-tls
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -119,7 +119,7 @@ jobs:
         with:
           path: |
             ~/.cargo/bin/sqlx
-          key: ${{ runner.os }}-sqlx-${{ env.SQLX_VERSION }}-${{ env.SQLX_FEATURES }}
+          key: ${{ runner.os }}-sqlx-${{ env.SQLX_VERSION }}-MANUALLY_UPDATE_IF_CHANGING_FEATURES
 
       - name: Install sqlx-cli 
         uses: actions-rs/cargo@v1
@@ -159,7 +159,7 @@ jobs:
           - 5432:5432
     env:
       SQLX_VERSION: 0.5.5
-      SQLX_FEATURES: postgres
+      SQLX_FEATURES: postgres,native-tls
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -176,7 +176,7 @@ jobs:
         with:
           path: |
             ~/.cargo/bin/sqlx
-          key: ${{ runner.os }}-sqlx-${{ env.SQLX_VERSION }}-${{ env.SQLX_FEATURES }}
+          key: ${{ runner.os }}-sqlx-${{ env.SQLX_VERSION }}-MANUALLY_UPDATE_IF_CHANGING_FEATURES
 
       - name: Install sqlx-cli 
         uses: actions-rs/cargo@v1
