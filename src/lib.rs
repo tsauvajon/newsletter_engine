@@ -4,10 +4,10 @@
     nonstandard_style,
     rust_2021_compatibility,
     unused,
-    clippy::all,
-    clippy::pedantic,
-    clippy::nursery,
-    clippy::cargo
+    // clippy::all,
+    // clippy::pedantic,
+    // clippy::nursery,
+    // clippy::cargo
 )]
 
 pub mod config;
