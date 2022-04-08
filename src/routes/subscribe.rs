@@ -9,10 +9,24 @@ pub struct SubscribePayload {
     email: String,
 }
 
+#[tracing::instrument(
+    name = "Adding a new subscriber", skip(form, connection),
+    fields(
+        request_id = %Uuid::new_v4(),
+        subscriber_email = %form.email,
+        subscriber_name= %form.name
+    )
+)]
 pub async fn subscribe(
     form: web::Form<SubscribePayload>,
     connection: web::Data<PgPool>,
 ) -> impl Responder {
+    tracing::info!(
+        "Adding '{}' ({}) as a new subscriber.",
+        form.name,
+        form.email,
+    );
+
     match sqlx::query!(
         r#"
         INSERT INTO subscriptions
@@ -28,9 +42,12 @@ pub async fn subscribe(
     .execute(connection.get_ref())
     .await
     {
-        Ok(_) => HttpResponse::Ok(),
+        Ok(_) => {
+            tracing::info!("New subscriber");
+            HttpResponse::Ok()
+        }
         Err(err) => {
-            println!("Insert subscription: {}", err);
+            tracing::error!("Insert subscription: {:?}", err);
             HttpResponse::InternalServerError()
         }
     }

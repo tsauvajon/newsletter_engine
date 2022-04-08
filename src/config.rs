@@ -3,8 +3,14 @@ use sqlx::{Connection, Executor, PgConnection, PgPool};
 
 #[derive(serde::Deserialize, Debug)]
 pub struct Settings {
-    pub port: u16,
+    pub app: Application,
     pub db: Database,
+}
+
+#[derive(serde::Deserialize, Debug)]
+pub struct Application {
+    pub port: u16,
+    pub host: String,
 }
 
 #[derive(serde::Deserialize, Debug)]
@@ -44,8 +50,44 @@ impl Database {
 }
 
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {
+    let base_path = std::env::current_dir().expect("Failed to determine the current directory");
+    let configuration_directory = base_path.join("config");
+
+    let env: Environment = std::env::var("APP_ENVIRONMENT")
+        .unwrap_or_else(|_| "local".into())
+        .try_into()
+        .expect("Unknown environment"); // TODO: return an Err instead
+
+    let config_path = configuration_directory.join(env.as_str());
+
     config::Config::builder()
-        .add_source(config::File::new("config", config::FileFormat::Yaml))
+        .add_source(config::File::from(config_path))
         .build()?
         .try_deserialize::<Settings>()
+}
+
+pub enum Environment {
+    Local,
+    Production,
+}
+
+impl Environment {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Environment::Local => "local",
+            Environment::Production => "production",
+        }
+    }
+}
+
+impl TryFrom<String> for Environment {
+    type Error = String;
+
+    fn try_from(s: String) -> Result<Self, Self::Error> {
+        match s.to_lowercase().as_str() {
+            "local" => Ok(Self::Local),
+            "production" => Ok(Self::Production),
+            unknown => Err(format!("unknown environment '{}'", unknown)),
+        }
+    }
 }
